@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISUS — AI Performance Eyewear | Kickstarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #080809;
+  --void2: #0e0f11;
+  --surface: #13151a;
+  --surface2: #1a1d24;
+  --arc: #00c8ff;
+  --arc-dim: rgba(0,200,255,0.12);
+  --arc-border: rgba(0,200,255,0.25);
+  --pace: #7fff6e;
+  --white: #f4f2ee;
+  --muted: #6b7280;
+  --dimmer: rgba(244,242,238,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* GRAIN */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:.5;
+}
+
+/* NAV */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 20px 48px;
+  background: rgba(8,8,9,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  animation: fadeDown 0.8s ease both;
+}
+.nav-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: 26px; letter-spacing: 5px; color: var(--arc);
+}
+.nav-tag {
+  font-family:'DM Mono',monospace;
+  font-size:10px; letter-spacing:3px; color:var(--muted); text-transform:uppercase;
+}
+.nav-cta {
+  background: var(--arc); color: var(--void);
+  font-family:'Outfit',sans-serif; font-weight:600; font-size:13px;
+  padding: 10px 24px; border:none; cursor:pointer; letter-spacing:1px;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  transition: transform 0.2s, opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; transform: scale(1.03); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden; text-align: center;
+}
+.hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+.hero-eyebrow {
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:5px; color:var(--arc); text-transform:uppercase;
+  margin-bottom:24px; opacity:0;
+  animation: fadeUp 1s 0.2s ease forwards;
+}
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: clamp(72px, 14vw, 160px);
+  line-height:0.88; letter-spacing:3px;
+  margin-bottom:8px; opacity:0;
+  animation: fadeUp 1s 0.35s ease forwards;
+}
+.hero-title span { color: var(--arc); }
+.hero-sub {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: clamp(22px, 4vw, 44px);
+  color: var(--muted); letter-spacing:3px;
+  margin-bottom:32px; opacity:0;
+  animation: fadeUp 1s 0.5s ease forwards;
+}
+.hero-desc {
+  font-size:17px; font-weight:300; color:rgba(244,242,238,0.65);
+  max-width:560px; margin:0 auto 48px; line-height:1.7; opacity:0;
+  animation: fadeUp 1s 0.65s ease forwards;
+}
+.hero-actions {
+  display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+  opacity:0; animation: fadeUp 1s 0.8s ease forwards;
+}
+.btn-primary {
+  background: var(--arc); color: var(--void);
+  font-family:'Outfit',sans-serif; font-weight:600; font-size:15px;
+  padding:16px 40px; border:none; cursor:pointer; letter-spacing:1px;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  transition: transform 0.2s, opacity 0.2s;
+}
+.btn-primary:hover { opacity:0.85; transform:scale(1.03); }
+.btn-secondary {
+  background:transparent; color:var(--white);
+  font-family:'Outfit',sans-serif; font-weight:400; font-size:15px;
+  padding:15px 40px; border:1px solid rgba(255,255,255,0.2);
+  cursor:pointer; letter-spacing:1px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover { border-color:var(--arc); color:var(--arc); }
+
+/* GLASS VISUAL */
+.glass-visual {
+  width:100%; max-width:680px; margin:56px auto 0;
+  opacity:0; animation: fadeUp 1s 1s ease forwards;
+}
+.glass-svg-wrap {
+  background: #0a0c10;
+  border:1px solid rgba(0,200,255,0.15);
+  padding: 48px 32px;
+  position:relative;
+}
+.glass-svg-wrap::before {
+  content:'● REC  96% BAT  14:32';
+  position:absolute; bottom:16px; right:20px;
+  font-family:'DM Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:rgba(0,200,255,0.4);
+}
+
+/* FUNDING BAR */
+.funding-bar-section {
+  background: var(--surface);
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:48px;
+}
+.funding-inner {
+  max-width:900px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:32px;
+  align-items:center;
+}
+.fund-stat { text-align:center; }
+.fund-val {
+  font-family:'Bebas Neue',sans-serif; font-size:48px;
+  letter-spacing:2px; color:var(--arc); line-height:1;
+  margin-bottom:4px;
+}
+.fund-lbl {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:3px; color:var(--muted); text-transform:uppercase;
+}
+.fund-bar-wrap { grid-column:1/-1; }
+.fund-bar-track {
+  height:4px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden;
+}
+.fund-bar-fill {
+  height:100%; width:0%; background:var(--arc); border-radius:2px;
+  transition: width 2s cubic-bezier(0.16,1,0.3,1);
+}
+.fund-days {
+  display:flex; justify-content:space-between;
+  font-family:'DM Mono',monospace; font-size:10px;
+  color:var(--muted); margin-top:8px;
+}
+
+/* SECTION */
+section { padding:100px 48px; max-width:1100px; margin:0 auto; }
+.section-label {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:5px; color:var(--arc); text-transform:uppercase;
+  margin-bottom:20px; display:flex; align-items:center; gap:12px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:rgba(0,200,255,0.15); }
+.section-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,6vw,72px); line-height:0.95;
+  letter-spacing:2px; margin-bottom:24px;
+}
+.section-body {
+  font-size:16px; color:rgba(244,242,238,0.65);
+  max-width:640px; line-height:1.8;
+}
+
+/* STORY */
+.story-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:64px;
+  align-items:center; margin-top:16px;
+}
+.story-quote {
+  font-family:'Outfit',sans-serif; font-weight:200;
+  font-size:clamp(22px,3vw,34px); line-height:1.4;
+  color:var(--white); border-left:2px solid var(--arc);
+  padding-left:28px; margin-bottom:24px;
+}
+.story-attr {
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:3px; color:var(--muted);
+}
+
+/* PROBLEM */
+.problem-cards {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:2px; margin-top:48px;
+}
+.prob-card {
+  background:var(--surface); padding:32px;
+  border-top:2px solid transparent;
+  transition:border-color 0.3s;
+}
+.prob-card:hover { border-top-color:var(--arc); }
+.prob-price {
+  font-family:'Bebas Neue',sans-serif; font-size:36px;
+  letter-spacing:2px; color:rgba(244,242,238,0.3);
+  margin-bottom:8px;
+}
+.prob-name { font-size:15px; font-weight:500; color:var(--white); margin-bottom:6px; }
+.prob-gap { font-size:13px; color:rgba(255,80,80,0.7); font-family:'DM Mono',monospace; }
+.prob-vs {
+  background:var(--arc); padding:32px; text-align:center;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.prob-vs-price {
+  font-family:'Bebas Neue',sans-serif; font-size:56px;
+  letter-spacing:2px; color:var(--void); line-height:1;
+}
+.prob-vs-name { font-size:18px; font-weight:600; color:var(--void); margin-bottom:4px; }
+.prob-vs-tag { font-size:12px; color:rgba(0,0,0,0.6); font-family:'DM Mono',monospace; }
+
+/* LAYERS */
+.layers-stack { display:flex; flex-direction:column; gap:2px; margin-top:48px; }
+.layer-row {
+  display:grid; grid-template-columns:80px 1fr;
+  gap:0; background:var(--surface); overflow:hidden;
+  transition:background 0.3s;
+}
+.layer-row:hover { background:var(--surface2); }
+.layer-num {
+  background:var(--surface2); display:flex;
+  align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:42px;
+  letter-spacing:2px; color:rgba(0,200,255,0.2);
+  border-right:1px solid rgba(255,255,255,0.05);
+}
+.layer-body { padding:28px 32px; }
+.layer-title { font-size:17px; font-weight:500; color:var(--white); margin-bottom:6px; }
+.layer-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+.layer-tag {
+  display:inline-block; margin-top:10px;
+  font-family:'DM Mono',monospace; font-size:9px;
+  letter-spacing:2px; padding:3px 10px;
+  background:var(--arc-dim); border:1px solid var(--arc-border);
+  color:var(--arc);
+}
+
+/* HUD DEMO */
+.hud-demo {
+  background:#060810; border:1px solid rgba(0,200,255,0.2);
+  padding:36px; margin-top:48px; position:relative;
+}
+.hud-demo-label {
+  position:absolute; top:16px; left:20px;
+  font-family:'DM Mono',monospace; font-size:9px;
+  letter-spacing:3px; color:rgba(0,200,255,0.35);
+}
+.hud-metrics {
+  display:flex; gap:40px; flex-wrap:wrap; margin-bottom:20px;
+}
+.hud-m { }
+.hud-val {
+  font-family:'DM Mono',monospace; font-size:36px;
+  font-weight:500; color:var(--arc); line-height:1;
+}
+.hud-lbl {
+  font-family:'DM Mono',monospace; font-size:9px;
+  letter-spacing:3px; color:rgba(0,200,255,0.35);
+  text-transform:uppercase; margin-top:4px;
+}
+.hud-divider { height:1px; background:rgba(0,200,255,0.1); margin:16px 0; }
+.hud-ai {
+  font-family:'DM Mono',monospace; font-size:12px;
+  color:rgba(127,255,110,0.8); line-height:1.9;
+}
+.hud-ai-label {
+  font-size:9px; letter-spacing:3px;
+  color:rgba(127,255,110,0.3); margin-bottom:8px;
+}
+.cursor { animation:blink 1s step-end infinite; }
+@keyframes blink { 50%{opacity:0;} }
+
+/* SPECS */
+.spec-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:2px; margin-top:48px;
+}
+.spec-card {
+  background:var(--surface); padding:24px;
+}
+.spec-val { font-size:22px; font-weight:500; color:var(--white); margin-bottom:4px; }
+.spec-lbl {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:2px; color:var(--muted); text-transform:uppercase;
+}
+
+/* REWARDS */
+.rewards-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px; margin-top:48px;
+}
+.reward-card {
+  background:var(--surface); border:1px solid rgba(255,255,255,0.07);
+  padding:32px; position:relative; transition:border-color 0.3s;
+}
+.reward-card:hover { border-color:rgba(0,200,255,0.3); }
+.reward-card.featured {
+  border-color:var(--arc); background:linear-gradient(135deg,rgba(0,200,255,0.05),transparent);
+}
+.reward-badge {
+  position:absolute; top:-1px; left:24px;
+  background:var(--arc); color:var(--void);
+  font-family:'DM Mono',monospace; font-size:9px;
+  letter-spacing:2px; padding:4px 12px; font-weight:500;
+}
+.reward-price {
+  font-family:'Bebas Neue',sans-serif; font-size:52px;
+  letter-spacing:2px; color:var(--white); line-height:1;
+  margin-bottom:4px; margin-top:8px;
+}
+.reward-name { font-size:16px; font-weight:500; color:var(--white); margin-bottom:12px; }
+.reward-desc { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
+.reward-includes { display:flex; flex-direction:column; gap:6px; margin-bottom:24px; }
+.reward-item {
+  display:flex; align-items:center; gap:8px;
+  font-size:12px; color:rgba(244,242,238,0.7);
+}
+.reward-item::before { content:'—'; color:var(--arc); font-family:'DM Mono',monospace; }
+.reward-slots {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:2px; color:var(--muted);
+}
+.reward-btn {
+  width:100%; padding:13px; background:transparent;
+  border:1px solid rgba(255,255,255,0.15); color:var(--white);
+  font-family:'Outfit',sans-serif; font-size:14px;
+  cursor:pointer; letter-spacing:1px; margin-top:16px;
+  transition:all 0.2s;
+}
+.reward-btn:hover { background:var(--arc); border-color:var(--arc); color:var(--void); font-weight:600; }
+.reward-card.featured .reward-btn {
+  background:var(--arc); border-color:var(--arc);
+  color:var(--void); font-weight:600;
+}
+
+/* TIMELINE */
+.timeline { display:flex; flex-direction:column; gap:0; margin-top:48px; }
+.tl-item {
+  display:grid; grid-template-columns:120px 1fr;
+  gap:0; position:relative;
+}
+.tl-item::before {
+  content:''; position:absolute;
+  left:56px; top:40px; bottom:-40px;
+  width:1px; background:rgba(0,200,255,0.15);
+}
+.tl-item:last-child::before { display:none; }
+.tl-date {
+  padding:24px 0;
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:2px; color:var(--arc); padding-right:24px;
+  text-align:right; padding-top:28px;
+}
+.tl-content { padding:20px 0 40px 32px; border-left:1px solid rgba(255,255,255,0.05); }
+.tl-dot {
+  width:10px; height:10px; background:var(--arc);
+  position:absolute; left:51px; top:27px;
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+}
+.tl-title { font-size:16px; font-weight:500; color:var(--white); margin-bottom:6px; }
+.tl-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+
+/* FOUNDER */
+.founder-block {
+  display:grid; grid-template-columns:1fr 2fr;
+  gap:64px; align-items:start; margin-top:48px;
+}
+.founder-card {
+  background:var(--surface); padding:32px; text-align:center;
+}
+.founder-avatar {
+  width:80px; height:80px; border-radius:0;
+  background:var(--arc-dim); border:1px solid var(--arc-border);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:32px;
+  color:var(--arc); margin:0 auto 16px;
+}
+.founder-name { font-size:16px; font-weight:500; color:var(--white); margin-bottom:4px; }
+.founder-role { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); }
+.founder-story { font-size:16px; color:rgba(244,242,238,0.65); line-height:1.9; }
+.founder-story p { margin-bottom:16px; }
+.founder-story strong { color:var(--white); font-weight:500; }
+
+/* FAQ */
+.faq-list { display:flex; flex-direction:column; gap:2px; margin-top:48px; }
+.faq-item {
+  background:var(--surface); overflow:hidden;
+}
+.faq-q {
+  padding:24px 32px; font-size:15px; font-weight:500;
+  color:var(--white); cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:color 0.2s;
+}
+.faq-q:hover { color:var(--arc); }
+.faq-q::after { content:'+'; font-size:20px; color:var(--arc); font-weight:300; }
+.faq-a {
+  padding:0 32px 24px;
+  font-size:14px; color:var(--muted); line-height:1.8;
+}
+
+/* CTA */
+.cta-section {
+  background:var(--surface);
+  border-top:1px solid rgba(0,200,255,0.15);
+  border-bottom:1px solid rgba(0,200,255,0.15);
+  text-align:center; padding:100px 48px;
+}
+.cta-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,8vw,96px);
+  letter-spacing:3px; line-height:0.95; margin-bottom:24px;
+}
+.cta-title span { color:var(--arc); }
+.cta-sub { font-size:16px; color:var(--muted); margin-bottom:40px; }
+
+/* FOOTER */
+footer {
+  padding:48px; display:flex;
+  justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px; letter-spacing:5px; color:rgba(255,255,255,0.2);
+}
+.footer-note { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+
+.reveal {
+  opacity:0; transform:translateY(32px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* DIVIDER */
+.full-divider { height:1px; background:rgba(255,255,255,0.05); }
+
+/* RESPONSIVE */
+@media(max-width:768px) {
+  nav { padding:16px 24px; }
+  .hero { padding:100px 24px 60px; }
+  section { padding:72px 24px; }
+  .story-grid, .founder-block { grid-template-columns:1fr; gap:32px; }
+  .funding-inner { grid-template-columns:1fr 1fr; }
+  .fund-bar-wrap { grid-column:1/-1; }
+  footer { flex-direction:column; gap:16px; text-align:center; }
+  .layer-row { grid-template-columns:56px 1fr; }
+  .layer-num { font-size:28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VISUS</div>
+  <div class="nav-tag">AI Performance Eyewear</div>
+  <button class="nav-cta" onclick="document.getElementById('rewards').scrollIntoView({behavior:'smooth'})">Back This Project</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding-left:0;padding-right:0;max-width:none;">
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">Kickstarter — Campaign Live</div>
+  <div class="hero-title">SEE EVERY<span>THING.</span></div>
+  <div class="hero-sub">Miss Nothing.</div>
+  <div class="hero-desc">The world's first AI performance eyewear. Replaces your running watch, GPS, coach, earbuds, and health tracker — and fits on your face.</div>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('rewards').scrollIntoView({behavior:'smooth'})">Back VISUS from $299</button>
+    <button class="btn-secondary" onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">Watch the Story</button>
+  </div>
+
+  <!-- GLASS ILLUSTRATION -->
+  <div class="glass-visual">
+    <div class="glass-svg-wrap">
+      <svg width="100%" viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- lens body -->
+        <polygon points="60,42 580,42 598,60 598,168 580,186 60,186 42,168 42,60" fill="#090f18" stroke="rgba(0,200,255,0.25)" stroke-width="1.2"/>
+        <!-- lens sheen -->
+        <line x1="60" y1="42" x2="580" y2="42" stroke="rgba(0,200,255,0.2)" stroke-width="2"/>
+        <line x1="60" y1="42" x2="42" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+        <line x1="580" y1="42" x2="598" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+        <!-- iridescent tint -->
+        <polygon points="62,44 578,44 595,62 595,166 578,184 62,184 45,166 45,62" fill="rgba(0,100,180,0.08)" stroke="none"/>
+        <!-- bridge -->
+        <polygon points="298,42 342,42 336,186 304,186" fill="#111820" stroke="rgba(0,200,255,0.15)" stroke-width="0.8"/>
+        <!-- camera -->
+        <rect x="306" y="54" width="28" height="10" fill="#060810" stroke="rgba(0,200,255,0.2)" stroke-width="0.5"/>
+        <circle cx="320" cy="59" r="3" fill="#030508"/>
+        <circle cx="320" cy="59" r="1.2" fill="#ff8800" opacity="0.9"/>
+        <!-- HUD zone -->
+        <polygon points="358,128 572,128 580,144 572,174 358,174 350,158" fill="rgba(0,200,255,0.05)" stroke="rgba(0,200,255,0.4)" stroke-width="0.8"/>
+        <text x="363" y="146" font-size="10" fill="rgba(0,200,255,0.9)" font-family="monospace" letter-spacing="0.5">4:52 min/km</text>
+        <text x="363" y="160" font-size="10" fill="rgba(0,200,255,0.65)" font-family="monospace">127 bpm  ·  8.4km</text>
+        <!-- left frame -->
+        <polygon points="42,60 60,42 60,186 42,168" fill="#111418" stroke="rgba(0,200,255,0.12)" stroke-width="0.8"/>
+        <!-- right frame -->
+        <polygon points="598,60 580,42 580,186 598,168" fill="#111418" stroke="rgba(0,200,255,0.12)" stroke-width="0.8"/>
+        <!-- left arm -->
+        <polygon points="16,56 42,60 42,168 16,162" fill="#0e1014" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+        <line x1="20" y1="72" x2="38" y2="74" stroke="#060608" stroke-width="1.4"/>
+        <line x1="20" y1="82" x2="38" y2="84" stroke="#060608" stroke-width="1.4"/>
+        <line x1="20" y1="92" x2="38" y2="94" stroke="#060608" stroke-width="1.4"/>
+        <line x1="20" y1="102" x2="38" y2="104" stroke="#060608" stroke-width="1.4"/>
+        <!-- right arm -->
+        <polygon points="624,56 598,60 598,168 624,162" fill="#0e1014" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+        <line x1="602" y1="72" x2="620" y2="74" stroke="#060608" stroke-width="1.4"/>
+        <line x1="602" y1="82" x2="620" y2="84" stroke="#060608" stroke-width="1.4"/>
+        <line x1="602" y1="92" x2="620" y2="94" stroke="#060608" stroke-width="1.4"/>
+        <line x1="602" y1="102" x2="620" y2="104" stroke="#060608" stroke-width="1.4"/>
+        <!-- eye tracking dots -->
+        <circle cx="180" cy="114" r="2" fill="rgba(0,200,255,0.3)" stroke="rgba(0,200,255,0.6)" stroke-width="0.8"/>
+        <circle cx="460" cy="114" r="2" fill="rgba(0,200,255,0.3)" stroke="rgba(0,200,255,0.6)" stroke-width="0.8"/>
+        <!-- VISUS wordmark -->
+        <text x="320" y="210" font-size="9" fill="rgba(255,255,255,0.15)" font-family="monospace" letter-spacing="6" text-anchor="middle">VISUS LABS — AI PERFORMANCE EYEWEAR</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDING BAR -->
+<div class="funding-bar-section">
+  <div class="funding-inner">
+    <div class="fund-stat">
+      <div class="fund-val" id="fundAmt">$0</div>
+      <div class="fund-lbl">Pledged of $50,000</div>
+    </div>
+    <div class="fund-stat">
+      <div class="fund-val" id="backerCount">0</div>
+      <div class="fund-lbl">Backers</div>
+    </div>
+    <div class="fund-stat">
+      <div class="fund-val">30</div>
+      <div class="fund-lbl">Days to go</div>
+    </div>
+    <div class="fund-stat">
+      <div class="fund-val" style="color:var(--pace);">0%</div>
+      <div class="fund-lbl">Funded</div>
+    </div>
+    <div class="fund-bar-wrap">
+      <div class="fund-bar-track"><div class="fund-bar-fill" id="fundBar"></div></div>
+      <div class="fund-days"><span>Campaign launches soon</span><span>Goal: $50,000 USD</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- STORY -->
+<div class="full-divider"></div>
+<section id="story" style="max-width:1100px;">
+  <div class="section-label reveal">01 — The story</div>
+  <div class="story-grid reveal">
+    <div>
+      <div class="story-quote">"She runs marathons. She can't see without glasses. No product existed for her."</div>
+      <div class="story-attr">— Beck, Founder of VISUS</div>
+    </div>
+    <div class="section-body" style="max-width:none;">
+      <p style="margin-bottom:16px;">My girlfriend runs. She has run through cities, trails, and marathons across Vietnam. She also has bad eyesight. And the problem nobody has solved — until now — is that visually impaired athletes are completely ignored by both the corrective eyewear industry and the sports technology industry at the same time.</p>
+      <p style="margin-bottom:16px;">She can wear prescription glasses or she can wear a smart watch or she can wear sport sunglasses. She cannot wear all three in one device. She has to squint at a tiny watch face mid-sprint. She has to stop to check her GPS. She cannot see clearly and see her data at the same time.</p>
+      <p>VISUS changes that. For her. For every athlete who needs correction. For everyone who has ever wished their data was exactly where their eyes already are.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<div class="full-divider"></div>
+<section style="max-width:1100px;">
+  <div class="section-label reveal">02 — The problem</div>
+  <div class="section-title reveal">You already spend<br><span style="color:var(--arc);">$1,597</span> on this.</div>
+  <div class="section-body reveal">Athletes already buy all these devices separately. VISUS at $450 replaces all of them. The pitch writes itself.</div>
+  <div class="problem-cards reveal">
+    <div class="prob-card">
+      <div class="prob-price">$30/mo</div>
+      <div class="prob-name">WHOOP 4.0</div>
+      <div class="prob-gap">× No display. No GPS.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-price">$599</div>
+      <div class="prob-name">Garmin Forerunner 965</div>
+      <div class="prob-gap">× Tiny wrist screen mid-sprint</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-price">$249</div>
+      <div class="prob-name">AirPods Pro</div>
+      <div class="prob-gap">× Audio only. No data.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-price">$400</div>
+      <div class="prob-name">Oakley Rx Sport</div>
+      <div class="prob-gap">× Zero smart features.</div>
+    </div>
+    <div class="prob-vs">
+      <div class="prob-vs-name">VISUS</div>
+      <div class="prob-vs-price">$450</div>
+      <div class="prob-vs-tag">Replaces all four.</div>
+    </div>
+  </div>
+</section>
+
+<!-- LAYERS -->
+<div class="full-divider"></div>
+<section style="max-width:1100px;">
+  <div class="section-label reveal">03 — The platform</div>
+  <div class="section-title reveal">Five layers.<br>One device.</div>
+  <div class="section-body reveal">VISUS isn't a HUD. It's a performance operating system built around your daily athletic life.</div>
+
+  <div class="hud-demo reveal">
+    <div class="hud-demo-label">VISUS LENS — LIVE VIEW</div>
+    <div class="hud-metrics">
+      <div class="hud-m"><div class="hud-val" id="paceVal">4:52</div><div class="hud-lbl">pace /km</div></div>
+      <div class="hud-m"><div class="hud-val" id="hrVal">127</div><div class="hud-lbl">bpm</div></div>
+      <div class="hud-m"><div class="hud-val">Z2</div><div class="hud-lbl">zone</div></div>
+      <div class="hud-m"><div class="hud-val">178</div><div class="hud-lbl">cadence</div></div>
+      <div class="hud-m"><div class="hud-val">8.4</div><div class="hud-lbl">km</div></div>
+    </div>
+    <div class="hud-divider"></div>
+    <div class="hud-ai-label">AI COACH — LIVE</div>
+    <div class="hud-ai" id="aiCoach">"You're 8 seconds faster than target pace. Heart rate drifting — ease slightly."<span class="cursor">|</span></div>
+  </div>
+
+  <div class="layers-stack reveal" style="margin-top:32px;">
+    <div class="layer-row">
+      <div class="layer-num">1</div>
+      <div class="layer-body">
+        <div class="layer-title">Performance OS — Morning Dashboard</div>
+        <div class="layer-desc">"Hey Visus, how am I performing today?" — Recovery score, HRV, sleep analysis, readiness, recommended pace. All on the lens in 2 seconds. This is what makes athletes wear it every single day.</div>
+        <div class="layer-tag">Daily retention driver</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">2</div>
+      <div class="layer-body">
+        <div class="layer-title">Real-Time AI Coaching</div>
+        <div class="layer-desc">Pace, HR, zone, cadence, and running power at eye level during every session. AI speaks every 60 seconds or on threshold breach. A running coach in your peripheral vision. No smartwatch does this.</div>
+        <div class="layer-tag">The hero feature</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">3</div>
+      <div class="layer-body">
+        <div class="layer-title">AI Agent — Hands-Free Everything</div>
+        <div class="layer-desc">"Hey Visus, text Sarah I'll be 15 minutes late." VISUS drafts, confirms in the lens, sends — without you touching your phone. Calls, messages, music, timers. All by voice while you run.</div>
+        <div class="layer-tag">Permanent competitive moat</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">4</div>
+      <div class="layer-body">
+        <div class="layer-title">Eyes-Up Navigation</div>
+        <div class="layer-desc">Turn-by-turn arrows appear in your lens 300m before every turn. Offline trail maps for hikers. Elevation warnings before the climb hits. Google Maps and Apple Maps. No phone. No wrist squint.</div>
+        <div class="layer-tag">Killer daily use feature</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">5</div>
+      <div class="layer-body">
+        <div class="layer-title">Full Health Platform</div>
+        <div class="layer-desc">HR, HRV, SpO2, skin temperature, sleep staging, training load, stress — all collected continuously. After 90 days VISUS knows your body better than any coach. The data moat that makes switching painful.</div>
+        <div class="layer-tag">Subscription revenue engine</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<div class="full-divider"></div>
+<section style="max-width:1100px;">
+  <div class="section-label reveal">04 — The hardware</div>
+  <div class="section-title reveal">Built different.<br>From the lens out.</div>
+  <div class="spec-grid reveal">
+    <div class="spec-card"><div class="spec-val">48g</div><div class="spec-lbl">Total weight</div></div>
+    <div class="spec-card"><div class="spec-val">12hr</div><div class="spec-lbl">Sport runtime</div></div>
+    <div class="spec-card"><div class="spec-val">IP68</div><div class="spec-lbl">Water resistance</div></div>
+    <div class="spec-card"><div class="spec-val">12MP</div><div class="spec-lbl">Camera</div></div>
+    <div class="spec-card"><div class="spec-val">Si-C</div><div class="spec-lbl">Battery chemistry</div></div>
+    <div class="spec-card"><div class="spec-val">NIR</div><div class="spec-lbl">Eye tracking</div></div>
+    <div class="spec-card"><div class="spec-val">Rx</div><div class="spec-lbl">Prescription ready</div></div>
+    <div class="spec-card"><div class="spec-val">BT 5.3</div><div class="spec-lbl">Connectivity</div></div>
+    <div class="spec-card"><div class="spec-val">L1+L5</div><div class="spec-lbl">Dual-band GPS</div></div>
+    <div class="spec-card"><div class="spec-val">3,000</div><div class="spec-lbl">Nits brightness</div></div>
+    <div class="spec-card"><div class="spec-val">Open</div><div class="spec-lbl">App platform</div></div>
+    <div class="spec-card"><div class="spec-val">Claude</div><div class="spec-lbl">AI backend</div></div>
+  </div>
+</section>
+
+<!-- REWARDS -->
+<div class="full-divider"></div>
+<section id="rewards" style="max-width:1100px;">
+  <div class="section-label reveal">05 — Back the project</div>
+  <div class="section-title reveal">Choose your<br><span style="color:var(--arc);">tier.</span></div>
+  <div class="section-body reveal">Early backers get VISUS at the lowest price it will ever be. All units ship with prescription lens sets included.</div>
+
+  <div class="rewards-grid reveal">
+
+    <div class="reward-card">
+      <div class="reward-price">$49</div>
+      <div class="reward-name">Supporter</div>
+      <div class="reward-desc">Believe in the vision. Your name in the VISUS founder credits and early access to all updates.</div>
+      <div class="reward-includes">
+        <div class="reward-item">Digital backer certificate</div>
+        <div class="reward-item">Founder updates + behind the scenes</div>
+        <div class="reward-item">Name in product credits</div>
+        <div class="reward-item">Early app beta access</div>
+      </div>
+      <div class="reward-slots">Unlimited slots</div>
+      <button class="reward-btn">Back at $49</button>
+    </div>
+
+    <div class="reward-card featured">
+      <div class="reward-badge">MOST POPULAR</div>
+      <div class="reward-price">$299</div>
+      <div class="reward-name">Early Bird — VISUS One</div>
+      <div class="reward-desc">First 200 backers get VISUS glasses at the deepest discount. Ships with both lens sets to your prescription.</div>
+      <div class="reward-includes">
+        <div class="reward-item">VISUS glasses (full spec)</div>
+        <div class="reward-item">Iridium tinted lens set (your Rx)</div>
+        <div class="reward-item">Clear lens set (your Rx)</div>
+        <div class="reward-item">Magnetic charging dock</div>
+        <div class="reward-item">6 months Performance subscription free</div>
+        <div class="reward-item">Priority shipping</div>
+      </div>
+      <div class="reward-slots">200 slots — 0 claimed</div>
+      <button class="reward-btn">Back at $299</button>
+    </div>
+
+    <div class="reward-card">
+      <div class="reward-price">$379</div>
+      <div class="reward-name">VISUS One — Standard</div>
+      <div class="reward-desc">The full VISUS experience. Glasses plus both lens sets to your prescription.</div>
+      <div class="reward-includes">
+        <div class="reward-item">VISUS glasses (full spec)</div>
+        <div class="reward-item">Iridium tinted lens set (your Rx)</div>
+        <div class="reward-item">Clear lens set (your Rx)</div>
+        <div class="reward-item">Magnetic charging dock</div>
+        <div class="reward-item">3 months Performance subscription free</div>
+      </div>
+      <div class="reward-slots">500 slots</div>
+      <button class="reward-btn">Back at $379</button>
+    </div>
+
+    <div class="reward-card">
+      <div class="reward-price">$499</div>
+      <div class="reward-name">VISUS Bundle</div>
+      <div class="reward-desc">Glasses plus the VISUS wrist wrap. The complete performance ecosystem. Full health platform from day one.</div>
+      <div class="reward-includes">
+        <div class="reward-item">VISUS glasses (full spec)</div>
+        <div class="reward-item">Both lens sets (your Rx)</div>
+        <div class="reward-item">VISUS wrist wrap (HR + HRV + SpO2 + temp + EDA)</div>
+        <div class="reward-item">Both charging docks</div>
+        <div class="reward-item">12 months Performance subscription free</div>
+        <div class="reward-item">Founding member status</div>
+      </div>
+      <div class="reward-slots">300 slots</div>
+      <button class="reward-btn">Back at $499</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<div class="full-divider"></div>
+<section style="max-width:1100px;">
+  <div class="section-label reveal">06 — Roadmap</div>
+  <div class="section-title reveal">How we get<br>there.</div>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Now</div>
+      <div class="tl-content">
+        <div class="tl-title">Kickstarter campaign + prototype build</div>
+        <div class="tl-desc">Campaign funds the first working prototype. Electronics integration, sensor validation, HUD software development, companion app skeleton.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Month 4</div>
+      <div class="tl-content">
+        <div class="tl-title">Working prototype + waveguide integration</div>
+        <div class="tl-desc">First unit that does everything — GPS, HR, HUD, eye tracking, AI voice, camera. Waveguide lens integration with Dispelix. Demo video released to backers.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Month 8</div>
+      <div class="tl-content">
+        <div class="tl-title">Alpha backer testing — 50 units</div>
+        <div class="tl-desc">First 50 units ship to alpha backers (Early Bird tier). Real runners. Real feedback. Prescription lens sets custom surfaced for each backer.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Month 14</div>
+      <div class="tl-content">
+        <div class="tl-title">Production pilot — 500 units</div>
+        <div class="tl-desc">Full production run. FCC and CE certification. All reward tiers begin shipping. Performance subscription launches. Wrist wrap ships to Bundle backers.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Month 18</div>
+      <div class="tl-content">
+        <div class="tl-title">General availability — $450 retail</div>
+        <div class="tl-desc">VISUS available to the public at $450. App Store launch. Third-party SDK opens. VISUS Pro tier launches with AI form analysis and race prediction.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<div class="full-divider"></div>
+<section style="max-width:1100px;">
+  <div class="section-label reveal">07 — The founder</div>
+  <div class="founder-block reveal">
+    <div class="founder-card">
+      <div class="founder-avatar">B</div>
+      <div class="founder-name">Beck</div>
+      <div class="founder-role">Founder — VISUS Labs</div>
+      <div style="margin-top:16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);">Hanoi, Vietnam</div>
+    </div>
+    <div class="founder-story">
+      <p>I am a <strong>21-year-old Kazakh-Mongolian entrepreneur</strong> based in Hanoi, Vietnam. I built VISUS because of a problem I watched someone I love deal with every day.</p>
+      <p>My girlfriend runs. She has run marathons across Vietnam. She also needs prescription glasses to see clearly. And there is no product in the world — not from Oakley, not from Garmin, not from Meta — that gives her what she actually needs: <strong>clear vision, live data, and an AI coach, all in one device she can wear while running.</strong></p>
+      <p>I spent months building the full technical specification, the brand identity, the app architecture, and the platform strategy before asking for a single dollar. This is a real product with a real founding story. VISUS is not a concept. It is the beginning of a category.</p>
+      <p style="color:var(--arc);font-style:italic;">"Every athlete who needs glasses deserves to see everything."</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<div class="full-divider"></div>
+<section style="max-width:1100px;">
+  <div class="section-label reveal">08 — Questions</div>
+  <div class="section-title reveal">Answered.</div>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <div class="faq-q">Do I need a prescription to use VISUS?</div>
+      <div class="faq-a">No. VISUS works with or without prescription lenses. If you have a prescription, you submit it during the order process and we surface both lens sets (tinted and clear) to your exact correction. If you don't need correction, plano (zero power) lenses are included at no extra cost.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What prescription range does VISUS support?</div>
+      <div class="faq-a">VISUS supports sphere -6.00 to +4.00 diopter and cylinder up to +/-2.00 diopter. This covers the vast majority of prescription users. If you are outside this range, please contact us before backing and we will confirm compatibility.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the HUD work? Can I see through it?</div>
+      <div class="faq-a">The HUD uses a waveguide microLED system — a tiny projector in the temple arm fires light into the lens, which carries it to your eye via a diffractive optical element etched into the polycarbonate. The display appears as a transparent overlay. You see the real world clearly, with data floating in your lower-right field of view. In minimal mode the lens is completely clear.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What apps does VISUS work with?</div>
+      <div class="faq-a">At launch: Spotify, Google Maps, Apple Maps, WhatsApp, iMessage, Strava, Apple Health, and Google Health Connect. VISUS is an open platform — we are releasing a third-party SDK so any developer can build a lens widget. More integrations will be added based on backer requests.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the Performance subscription?</div>
+      <div class="faq-a">The free tier includes basic HUD, GPS, HR, music control, and navigation. The Performance subscription ($15/month) adds the full Performance OS — recovery score, readiness, HRV, sleep analysis, AI real-time coaching, training load, AI agent full commands, and longitudinal health insights. Early Bird and Bundle backers receive 6–12 months free.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">When will VISUS ship?</div>
+      <div class="faq-a">Alpha units (50 units) ship to Early Bird backers at Month 8. Full production ships at Month 14. We will give backers regular transparent updates throughout the build process. Hardware is hard and timelines can shift — we will always communicate early if they do.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What if the campaign does not reach its goal?</div>
+      <div class="faq-a">Kickstarter is all-or-nothing. If we do not reach $50,000, no one is charged and no money changes hands. We believe we will reach the goal — but if we don't, backers are fully protected.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="full-divider"></div>
+<div class="cta-section">
+  <div class="cta-title">Ready to<br><span>see everything?</span></div>
+  <div class="cta-sub">Join the athletes who are done squinting at their wrists.</div>
+  <button class="btn-primary" style="font-size:16px;padding:18px 48px;" onclick="document.getElementById('rewards').scrollIntoView({behavior:'smooth'})">Back VISUS on Kickstarter</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VISUS</div>
+  <div class="footer-note">© 2026 VISUS Labs — Hanoi, Vietnam — See everything. Miss nothing.</div>
+</footer>
+
+<script>
+// reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// animate funding bar on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('fundBar').style.width = '0%';
+  }, 800);
+});
+
+// live HUD animation
+const paces = ['4:52','4:48','4:55','4:51','4:49'];
+const hrs = ['127','129','131','128','126'];
+const coaches = [
+  '"You\'re 8 seconds faster than target pace. Heart rate drifting — ease slightly."',
+  '"Entering Zone 3. HR at 131. Consider slowing 5 seconds per km."',
+  '"Cadence holding strong at 178. Keep this rhythm through km 9."',
+  '"1.6km to finish. Current pace: 23 seconds under target. Push now."',
+  '"Strong run. Zone 2 for 71% of session. Recovery recommended tomorrow."'
+];
+let ci = 0;
+setInterval(() => {
+  ci = (ci + 1) % paces.length;
+  document.getElementById('paceVal').textContent = paces[ci];
+  document.getElementById('hrVal').textContent = hrs[ci];
+  const el = document.getElementById('aiCoach');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.innerHTML = coaches[ci] + '<span class="cursor">|</span>';
+    el.style.opacity = '1';
+    el.style.transition = 'opacity 0.5s';
+  }, 300);
+}, 4000);
+
+// FAQ toggle
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const a = q.nextElementSibling;
+    const isOpen = a.style.display === 'block';
+    document.querySelectorAll('.faq-a').forEach(x => x.style.display = 'none');
+    document.querySelectorAll('.faq-q').forEach(x => x.style.color = '');
+    if (!isOpen) {
+      a.style.display = 'block';
+      q.style.color = 'var(--arc)';
+    }
+  });
+});
+</script>
+</body>
+</html>
